@@ -20,14 +20,14 @@ const getAnimals = async (req, res) => {
 // multer setup for file upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, path.join(__dirname, "../public/uploads"));
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 // create an animal
 const createAnimal = async (req, res) => {
@@ -35,17 +35,16 @@ const createAnimal = async (req, res) => {
     const { name, category } = req.body;
     const { filename } = req.file;
 
-    if ((!name, !filename, !category)) {
+    if (!name | !category) {
       throw new Error("All field is required and cannot be empty");
     }
 
     const animal = await Animal.create({
       name,
       category,
-      image: `/uploads/${filename}`, // Save file path
+      image: filename,
     });
 
-    await animal.save();
     res.status(201).json(animal);
   } catch (error) {
     res.status(400).json({ message: error.message });

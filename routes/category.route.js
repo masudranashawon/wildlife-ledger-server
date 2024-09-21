@@ -8,6 +8,6 @@ const {
 const router = express.Router();
 
 router.get("/", getCategories);
-router.get("/create", createCategory);
+router.post("/create", createCategory);
 
 module.exports = router;
