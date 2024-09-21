@@ -22,6 +22,13 @@ const createCategory = async (req, res) => {
       throw new Error("Category field is required and cannot be empty");
     }
 
+    const isExist = await Category.findOne({ name });
+
+    if (isExist) {
+      return res.status(400).json({ message: "Category name already exist!" });
+    }
+
+    // category creating
     const category = await Category.create({ name });
 
     res.status(201).json(category);

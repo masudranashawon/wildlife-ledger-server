@@ -39,6 +39,13 @@ const createAnimal = async (req, res) => {
       throw new Error("All field is required and cannot be empty");
     }
 
+    const isExist = await Animal.findOne({ name });
+
+    if (isExist) {
+      return res.status(400).json({ message: "Animal name already exist!" });
+    }
+
+    // animal creating and store image
     const animal = await Animal.create({
       name,
       category,
