@@ -1,9 +1,10 @@
 require("dotenv").config();
 
 const express = require("express");
+const fileUpload = require("express-fileupload");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const path = require("path");
+const cloudinary = require("cloudinary").v2;
 
 const categoryRoutes = require("./routes/category.route");
 const animalRoutes = require("./routes/animal.route");
@@ -12,12 +13,23 @@ const animalRoutes = require("./routes/animal.route");
 const PORT = process.env.PORT || 8080;
 const uri = process.env.MONGO_URI;
 
+// Cloudinary configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 // express app
 const app = express();
 
 // middleware
-app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
-
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/", // temporary directory for file storage
+  })
+);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

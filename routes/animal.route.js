@@ -2,13 +2,13 @@ const express = require("express");
 const {
   getAnimals,
   createAnimal,
-  upload,
 } = require("../controllers/animal.controller");
+const { uploadImage } = require("../middleware/upload.middleware");
 
 // router
 const router = express.Router();
 
 router.get("/", getAnimals);
-router.post("/create", upload.single("image"), createAnimal);
+router.post("/create", uploadImage, createAnimal);
 
 module.exports = router;
